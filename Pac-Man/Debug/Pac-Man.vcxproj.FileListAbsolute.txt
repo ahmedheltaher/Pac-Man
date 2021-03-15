@@ -1,0 +1,2 @@
+X:\Ahmed\Code\Projects\Pac-Man\Pac-Man\Debug\Pac-Man.exe
+X:\Ahmed\Code\Projects\Pac-Man\Pac-Man\Debug\Pac-Man.pdb
