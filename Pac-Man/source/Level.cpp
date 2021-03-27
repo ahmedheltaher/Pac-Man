@@ -5,15 +5,10 @@
 
 // Constructor
 Level::Level(int levelNumber) :map("level_" + std::to_string(levelNumber)), pacman(map.getPlayerPosition().x, map.getPlayerPosition().y), score(0), soundManager("music", "sfx") {
-    // Change To Be Loded Dynamicly
-    pacman.loadTexture("pacman.png");
-    pacman.setTextureRect(sf::IntRect(3, 3, 14, 14));
-
     ghosts = map.getGhosts();
     for (unsigned int i = 0; i < ghosts.size(); i++) {
         if (ghosts[i].moveType == Name::Horizontal) ghosts[i].loadTexture("red_ghost.png");
         else ghosts[i].loadTexture("yellow_ghost.png");
-        ghosts[i].setTextureRect(sf::IntRect(3, 3, 14, 14));
     }
 };
 

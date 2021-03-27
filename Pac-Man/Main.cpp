@@ -1,39 +1,18 @@
 #include "./headers/Main.h"
 
 void mainMenu() {
+    mainMenuMutex.lock();
     sf::RenderWindow mainMenuWindow(VIDEOMODE, TITLE);
     setupLogo(mainMenuWindow);
     sf::Thread gameThread(&gameLoop),
         instructionsThread(&instructions), leaderBoardThread(&leaderBoard),
         creditsThread(&credits), enterYourNameThread(&enterYourName);
     Menu menu("Joystix", 40, 450, 400, 400, 400, true);
-    menu.addNewItem("Play", [&]() {
-        enterYourNameMutex.lock();
-        mainMenuWindow.close();
-        enterYourNameThread.launch();
-        enterYourNameMutex.unlock();
-    });
-    menu.addNewItem("Instruction", [&]() {
-        instructionsMutex.lock();
-        mainMenuWindow.close();
-        instructionsThread.launch();
-        instructionsMutex.unlock();
-    });
-    menu.addNewItem("Leader Board", [&]() {
-        leaderBoardMutex.lock();
-        mainMenuWindow.close();
-        leaderBoardThread.launch();
-        leaderBoardMutex.unlock();
-    });
-    menu.addNewItem("Credits", [&]() {
-        creditsMutex.lock();
-        mainMenuWindow.close();
-        creditsThread.launch();
-        creditsMutex.unlock();
-    });
-    menu.addNewItem("Exit", [&]() {
-        mainMenuWindow.close();
-    });
+    menu.addNewItem("Play", [&]() { switchWindows(enterYourNameMutex, mainMenuWindow, enterYourNameThread); });
+    menu.addNewItem("Instruction", [&]() { switchWindows(instructionsMutex, mainMenuWindow, instructionsThread); });
+    menu.addNewItem("Leader Board", [&]() { switchWindows(leaderBoardMutex, mainMenuWindow, leaderBoardThread); });
+    menu.addNewItem("Credits", [&]() { switchWindows(creditsMutex, mainMenuWindow, creditsThread); });
+    menu.addNewItem("Exit", [&]() { mainMenuWindow.close(); });
 
     sf::Texture logotexture;
     logotexture.loadFromFile("./textures/start_logo.png");
@@ -64,6 +43,7 @@ void mainMenu() {
         mainMenuWindow.draw(imageSprite);
         mainMenuWindow.display();
     }
+    mainMenuMutex.unlock();
 };
 
 void instructions() {
@@ -72,13 +52,8 @@ void instructions() {
     sf::RenderWindow instructionsWindow(VIDEOMODE, TITLE + " - Instructions");
     setupLogo(instructionsWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
-    controlMenu.addNewItem("Back", [&]() {
-        instructionsWindow.close();
-        mainMenuThread.launch();
-    });
-    controlMenu.addNewItem("Exit", [&]() {
-        instructionsWindow.close();
-    });
+    controlMenu.addNewItem("Back", [&]() { switchWindows(mainMenuMutex, instructionsWindow, mainMenuThread); });
+    controlMenu.addNewItem("Exit", [&]() { instructionsWindow.close(); });
     Menu textMenu("Joystix", 60, 0, 100, 400, 700, false);
     textMenu.addNewItem("\t\tGoaL\nGuide Pacman around \nthe maze and eat \nall the little white\ndots whilst avoiding \nthose nasty ghosts.\n \t  Contols\nWASD keys for Pacman \nEsc : Pause game \n ", []() {});
 
@@ -111,13 +86,8 @@ void leaderBoard() {
     sf::RenderWindow leaderBoardWindow(VIDEOMODE, TITLE + " - Leader Board");
     setupLogo(leaderBoardWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
-    controlMenu.addNewItem("Back", [&]() {
-        leaderBoardWindow.close();
-        mainMenuThread.launch();
-        });
-    controlMenu.addNewItem("Exit", [&]() {
-        leaderBoardWindow.close();
-        });
+    controlMenu.addNewItem("Back", [&]() { switchWindows(mainMenuMutex, leaderBoardWindow, mainMenuThread); });
+    controlMenu.addNewItem("Exit", [&]() { leaderBoardWindow.close(); });
     Menu leaderBoardMenu("Joystix", 60, 0, 100, 400, 700, false);
     std::string data = storage.getStringLeaderBoard();
     leaderBoardMenu.addNewItem(data, []() {});
@@ -151,13 +121,8 @@ void credits() {
     sf::RenderWindow creditsWindow(VIDEOMODE, TITLE + " - Credits");
     setupLogo(creditsWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
-    controlMenu.addNewItem("Back", [&]() {
-        creditsWindow.close();
-        mainMenuThread.launch();
-        });
-    controlMenu.addNewItem("Exit", [&]() {
-        creditsWindow.close();
-        });
+    controlMenu.addNewItem("Back", [&]() { switchWindows(mainMenuMutex, creditsWindow, mainMenuThread); });
+    controlMenu.addNewItem("Exit", [&]() { creditsWindow.close(); });
     Menu leaderBoardMenu("Joystix", 40, 0, 100, 400, 700, false);
     leaderBoardMenu.addNewItem("This game developed by \n \tAhmed Eltaher \nRelease date : 1/4/2021 ", []() {});
 
@@ -193,22 +158,12 @@ void enterYourName() {
     sf::RenderWindow enterYourNameWindow(VIDEOMODE, TITLE + " - Enter Your Name");
     setupLogo(enterYourNameWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
-    controlMenu.addNewItem("Continue", [&]() {
-        gameMutex.lock();
-        enterYourNameWindow.close();
-        gameThread.launch();
-        gameMutex.unlock();
-    });
-    controlMenu.addNewItem("Back", [&]() {
-        enterYourNameWindow.close();
-        mainMenuThread.launch();
-    });
-    controlMenu.addNewItem("Exit", [&]() {
-        enterYourNameWindow.close();
-    });
+    controlMenu.addNewItem("Continue", [&]() { switchWindows(gameMutex, enterYourNameWindow, gameThread); });
+    controlMenu.addNewItem("Back", [&]() { switchWindows(mainMenuMutex, enterYourNameWindow, mainMenuThread); });
+    controlMenu.addNewItem("Exit", [&]() { enterYourNameWindow.close(); });
     Menu inputMenu("Joystix", 40, 0, 100, 400, 700, false);
     inputMenu.addNewItem("Enter Your Name (max 10 chars)", []() {});
-    inputMenu.addNewItem(playerName, []() {});
+    inputMenu.addNewItem(playerName.name, []() {});
 
     while (enterYourNameWindow.isOpen()) {
         sf::Event event;
@@ -219,18 +174,18 @@ void enterYourName() {
                 break;
             case sf::Event::KeyPressed:
                 if (event.key.code == sf::Keyboard::BackSpace) {
-                    if (!playerName.empty()) {
-                        playerName.pop_back();
-                        playerNameLength--;
+                    if (!playerName.name.empty()) {
+                        playerName.name.pop_back();
+                        playerName.length--;
                     }
                 }
                 if (std::isprint(event.text.unicode)) soundManager.playSFX("menu");
                 controlMenu.handleEvents(event);
                 break;
             case sf::Event::TextEntered:
-                if (playerNameLength < 10 && std::isprint(event.text.unicode)) {
-                    playerName += event.text.unicode;
-                    playerNameLength++;
+                if (playerName.length < 10 && std::isprint(event.text.unicode)) {
+                    playerName.name += event.text.unicode;
+                    playerName.length++;
                 }
                 break;
             default:
@@ -244,7 +199,7 @@ void enterYourName() {
             showCursor = !showCursor;
             textEffectTime = sf::Time::Zero;
         }
-        inputMenu.updateItem(1, playerName + (showCursor ? '_' : ' '));
+        inputMenu.updateItem(1, playerName.name + (showCursor ? '_' : ' '));
         enterYourNameWindow.clear();
         controlMenu.draw(enterYourNameWindow);
         inputMenu.draw(enterYourNameWindow);
@@ -259,13 +214,8 @@ void win() {
     sf::RenderWindow winWindow(VIDEOMODE, TITLE + " - You Won!");
     setupLogo(winWindow);
     Menu controlMenu("Joystix", 40, 400, 400, 400, 400, true);
-    controlMenu.addNewItem("Back to main Menu", [&]() {
-        winWindow.close();
-        mainMenuThread.launch();
-        });
-    controlMenu.addNewItem("Exit", [&]() {
-        winWindow.close();
-        });
+    controlMenu.addNewItem("Back to main Menu", [&]() { switchWindows(mainMenuMutex, winWindow, mainMenuThread); });
+    controlMenu.addNewItem("Exit", [&]() { winWindow.close(); });
     Menu leaderBoardMenu("Joystix", 80, 400, 100, 400, 700, false);
     leaderBoardMenu.addNewItem("You Won!", []() {});
 
@@ -298,13 +248,8 @@ void lose() {
     sf::RenderWindow loseWindow(VIDEOMODE, TITLE + " - You Lost");
     setupLogo(loseWindow);
     Menu controlMenu("Joystix", 40, 400, 400, 400, 400, true);
-    controlMenu.addNewItem("Back to main Menu", [&]() {
-        loseWindow.close();
-        mainMenuThread.launch();
-        });
-    controlMenu.addNewItem("Exit", [&]() {
-        loseWindow.close();
-        });
+    controlMenu.addNewItem("Back to main Menu", [&]() { switchWindows(mainMenuMutex, loseWindow, mainMenuThread); });
+    controlMenu.addNewItem("Exit", [&]() { loseWindow.close(); });
     Menu leaderBoardMenu("Joystix", 80, 400, 100, 400, 700, false);
     leaderBoardMenu.addNewItem("You Lost", []() {});
 
@@ -342,10 +287,10 @@ void gameLoop() {
     sf::Time time;
     float deltaTime = 0;
     soundManager.playMusic("mainTheme");
-    bool whiteSpacesOnly = std::all_of(playerName.begin(), playerName.end(), isspace);
-    playerName = (playerName == "" || whiteSpacesOnly) ? "Unknow" : playerName;
+    bool whiteSpacesOnly = std::all_of(playerName.name.begin(), playerName.name.end(), isspace);
+    playerName.name = (playerName.name == "" || whiteSpacesOnly) ? "Unknow" : playerName.name;
     Menu sideMenu("Joystix", 20, 1250, 50, 250, 200, false);
-    sideMenu.addNewItem("Player: \n" + playerName, []() {});
+    sideMenu.addNewItem("Player: \n" + playerName.name, []() {});
     sideMenu.addNewItem("FPS: 0", []() {});
     sideMenu.addNewItem("Score: 0", []() {});
     sideMenu.addNewItem("Lives: 0", []() {});
@@ -356,13 +301,8 @@ void gameLoop() {
         level.pause();
         soundManager.playBack();
     });
-    pauseMenu.addNewItem("Back To Main Menu", [&]() {
-        gameWindow.close();
-        mainMenuThread.launch();
-    });
-    pauseMenu.addNewItem("Exit", [&]() {
-        gameWindow.close();
-    });
+    pauseMenu.addNewItem("Back To Main Menu", [&]() { switchWindows(mainMenuMutex, gameWindow, mainMenuThread); });
+    pauseMenu.addNewItem("Exit", [&]() { gameWindow.close(); });
     while (gameWindow.isOpen()) {
         sf::Event event;
         while (gameWindow.pollEvent(event)) {
@@ -418,7 +358,7 @@ void gameLoop() {
                 gameWindow.close();
                 winMutex.unlock();
                 soundManager.pause();
-                storage.addData(playerName + " " + std::to_string(level.getScore()));
+                storage.addData(playerName.name + " " + std::to_string(level.getScore()));
             }
             if (level.pacmanDied()) {
                 loseMutex.lock();
@@ -426,7 +366,7 @@ void gameLoop() {
                 gameWindow.close();
                 loseMutex.unlock();
                 soundManager.pause();
-                storage.addData(playerName + " " + std::to_string(level.getScore()));
+                storage.addData(playerName.name + " " + std::to_string(level.getScore()));
             }
 
             fps.update();

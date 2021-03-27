@@ -9,11 +9,11 @@ enum class Name {
 
 class Ghost : public Entity {
 private:
+	void changeGhostDirection();
 public:
 	Name moveType;
 	Ghost(Name, float, float);
 	~Ghost();
-	void changeGhostDirection();
 	void update(float, std::vector<sf::RectangleShape>);
 };
 #endif // !GHOST

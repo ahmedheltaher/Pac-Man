@@ -12,15 +12,27 @@
 #define VIDEOMODE  sf::VideoMode(1500, 1024)
 std::string TITLE = "Pac-Man";
 
+sf::Image icon;
 
-void setupLogo(sf::RenderWindow &window) {
-	sf::Image icon;
+void setupLogo(sf::RenderWindow& window) {
 	icon.loadFromFile("./textures/resized_logo.png");
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-}
+};
 
-std::string playerName = "";
-int playerNameLength = 0;
+
+void switchWindows(sf::Mutex& mutex, sf::RenderWindow& window, sf::Thread& thread) {
+	mutex.lock();
+	window.close();
+	thread.launch();
+	mutex.unlock();
+};
+
+struct PlayerName {
+	std::string name;
+	int length;
+};
+
+PlayerName playerName = { "", 0 };
 
 Storage storage;
 SoundManager soundManager("music", "sfx");
