@@ -2,11 +2,7 @@
 
 This is Pac-Man game made in **C++** & **SFML 2.5.1**
 
----
-
 ## Screenshots
-
----
 
 ### Main Menu Screenshot
 

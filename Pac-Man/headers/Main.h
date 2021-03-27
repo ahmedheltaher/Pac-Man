@@ -15,7 +15,7 @@ std::string TITLE = "Pac-Man";
 
 void setupLogo(sf::RenderWindow &window) {
 	sf::Image icon;
-	icon.loadFromFile("./textures/logo.png");
+	icon.loadFromFile("./textures/resized_logo.png");
 	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 }
 
