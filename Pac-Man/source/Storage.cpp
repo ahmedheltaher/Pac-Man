@@ -1,18 +1,17 @@
 #include "../headers/Storage.h"
 #include <fstream>
 #include <sstream>
+#include <algorithm>
 
 // Constructor
 Storage::Storage() {
 	std::ifstream dataBaseFile("./storage/data.txt");
 	if (dataBaseFile.is_open()) {
 		std::string line, key, value;
-		int lines_read = 0;
-		while ((lines_read < 10) && std::getline(dataBaseFile, line)) {
+		while (std::getline(dataBaseFile, line)) {
 			std::istringstream in(line);
 			in >> key >> value;
-			leaderBoard[key] = value;
-			++lines_read;
+			leaderBoard.push_back(std::make_pair(key, std::stoi(value)));
 		}
 	}
 	dataBaseFile.close();
@@ -27,6 +26,19 @@ void Storage::addData(std::string data) {
 	dataBaseFile.close();
 };
 
-std::map<std::string, std::string> Storage::getLeaderBoard() {
-	return leaderBoard;
+bool sortbysec(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b)
+{
+	return (a.second > b.second);
+}
+
+std::string Storage::getStringLeaderBoard() {
+	std::string data = "";
+	int dataEnterd = 0;
+	std::sort(leaderBoard.begin(), leaderBoard.end(), sortbysec);
+	for (int i = 0; i < leaderBoard.size(); i++) {
+		if (dataEnterd > 10) break;
+		data += leaderBoard[i].first + " - " + std::to_string(leaderBoard[i].second) + "\n";
+		dataEnterd++;
+	}
+	return data;
 };

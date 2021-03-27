@@ -9,15 +9,22 @@
 #include "./headers/Menu.h"
 
 
-#define TITLE  "Pac-Man"
 #define VIDEOMODE  sf::VideoMode(1500, 1024)
+std::string TITLE = "Pac-Man";
+
+
+void setupLogo(sf::RenderWindow &window) {
+	sf::Image icon;
+	icon.loadFromFile("./textures/logo.png");
+	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+}
 
 std::string playerName = "";
 int playerNameLength = 0;
 
 Storage storage;
 SoundManager soundManager("music", "sfx");
-Level level(1);
+Level level(2);
 bool gamePaused = false;
 
 void mainMenu();

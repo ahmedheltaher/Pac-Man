@@ -1,6 +1,8 @@
 #include "./headers/Main.h"
+
 void mainMenu() {
     sf::RenderWindow mainMenuWindow(VIDEOMODE, TITLE);
+    setupLogo(mainMenuWindow);
     sf::Thread gameThread(&gameLoop),
         instructionsThread(&instructions), leaderBoardThread(&leaderBoard),
         creditsThread(&credits), enterYourNameThread(&enterYourName);
@@ -67,7 +69,8 @@ void mainMenu() {
 void instructions() {
     instructionsMutex.lock();
     sf::Thread mainMenuThread(&mainMenu);
-    sf::RenderWindow instructionsWindow(VIDEOMODE, TITLE);
+    sf::RenderWindow instructionsWindow(VIDEOMODE, TITLE + " - Instructions");
+    setupLogo(instructionsWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
     controlMenu.addNewItem("Back", [&]() {
         instructionsWindow.close();
@@ -105,7 +108,8 @@ void instructions() {
 void leaderBoard() {
     leaderBoardMutex.lock();
     sf::Thread mainMenuThread(&mainMenu);
-    sf::RenderWindow leaderBoardWindow(VIDEOMODE, TITLE);
+    sf::RenderWindow leaderBoardWindow(VIDEOMODE, TITLE + " - Leader Board");
+    setupLogo(leaderBoardWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
     controlMenu.addNewItem("Back", [&]() {
         leaderBoardWindow.close();
@@ -115,10 +119,8 @@ void leaderBoard() {
         leaderBoardWindow.close();
         });
     Menu leaderBoardMenu("Joystix", 60, 0, 100, 400, 700, false);
-    std::map<std::string, std::string> data = storage.getLeaderBoard();
-    std::string board = "";
-    for (const auto& k : data) board += k.first + " - " + k.second + "\n";
-    leaderBoardMenu.addNewItem(board, []() {});
+    std::string data = storage.getStringLeaderBoard();
+    leaderBoardMenu.addNewItem(data, []() {});
 
     while (leaderBoardWindow.isOpen()) {
         sf::Event event;
@@ -146,7 +148,8 @@ void leaderBoard() {
 void credits() {
     creditsMutex.lock();
     sf::Thread mainMenuThread(&mainMenu);
-    sf::RenderWindow creditsWindow(VIDEOMODE, TITLE);
+    sf::RenderWindow creditsWindow(VIDEOMODE, TITLE + " - Credits");
+    setupLogo(creditsWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
     controlMenu.addNewItem("Back", [&]() {
         creditsWindow.close();
@@ -187,7 +190,8 @@ void enterYourName() {
     sf::Clock clock;
     static sf::Time textEffectTime;
     static bool showCursor;
-    sf::RenderWindow enterYourNameWindow(VIDEOMODE, TITLE);
+    sf::RenderWindow enterYourNameWindow(VIDEOMODE, TITLE + " - Enter Your Name");
+    setupLogo(enterYourNameWindow);
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
     controlMenu.addNewItem("Continue", [&]() {
         gameMutex.lock();
@@ -252,7 +256,8 @@ void enterYourName() {
 void win() {
     winMutex.lock();
     sf::Thread mainMenuThread(&mainMenu);
-    sf::RenderWindow winWindow(VIDEOMODE, TITLE);
+    sf::RenderWindow winWindow(VIDEOMODE, TITLE + " - You Won!");
+    setupLogo(winWindow);
     Menu controlMenu("Joystix", 40, 400, 400, 400, 400, true);
     controlMenu.addNewItem("Back to main Menu", [&]() {
         winWindow.close();
@@ -262,7 +267,7 @@ void win() {
         winWindow.close();
         });
     Menu leaderBoardMenu("Joystix", 80, 400, 100, 400, 700, false);
-    leaderBoardMenu.addNewItem("You Win!", []() {});
+    leaderBoardMenu.addNewItem("You Won!", []() {});
 
     while (winWindow.isOpen()) {
         sf::Event event;
@@ -290,7 +295,8 @@ void win() {
 void lose() {
     loseMutex.lock();
     sf::Thread mainMenuThread(&mainMenu);
-    sf::RenderWindow loseWindow(VIDEOMODE, TITLE);
+    sf::RenderWindow loseWindow(VIDEOMODE, TITLE + " - You Lost");
+    setupLogo(loseWindow);
     Menu controlMenu("Joystix", 40, 400, 400, 400, 400, true);
     controlMenu.addNewItem("Back to main Menu", [&]() {
         loseWindow.close();
@@ -325,19 +331,21 @@ void lose() {
     loseMutex.unlock();
 };
 
-
 void gameLoop() {
     gameMutex.lock();
     sf::Thread mainMenuThread(&mainMenu);
     sf::Thread winThread(&win), loseThread(&lose);
     sf::RenderWindow gameWindow(VIDEOMODE, TITLE);
+    setupLogo(gameWindow);
     FPS fps;
     sf::Clock clock;
     sf::Time time;
     float deltaTime = 0;
     soundManager.playMusic("mainTheme");
-    Menu sideMenu("Joystix", 20, 1250, 50, 200, 200, false);
-    sideMenu.addNewItem("Player: " + playerName, []() {});
+    bool whiteSpacesOnly = std::all_of(playerName.begin(), playerName.end(), isspace);
+    playerName = (playerName == "" || whiteSpacesOnly) ? "Unknow" : playerName;
+    Menu sideMenu("Joystix", 20, 1250, 50, 250, 200, false);
+    sideMenu.addNewItem("Player: \n" + playerName, []() {});
     sideMenu.addNewItem("FPS: 0", []() {});
     sideMenu.addNewItem("Score: 0", []() {});
     sideMenu.addNewItem("Lives: 0", []() {});
@@ -379,8 +387,7 @@ void gameLoop() {
                     soundManager.pause();
 
                 }
-                switch (event.key.code) {
-                case sf::Keyboard::Escape:
+                if (event.key.code == sf::Keyboard::Escape) {
                     if (gamePaused) {
                         gamePaused = false;
                         level.pause();
@@ -390,11 +397,9 @@ void gameLoop() {
                         gamePaused = true;
                         soundManager.pause();
                     }
-                    break;
-                default:
-                    break;
                 }
                 level.handleEvents(event);
+                break;
             default:
                 break;
             }

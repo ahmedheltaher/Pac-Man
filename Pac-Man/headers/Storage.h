@@ -1,16 +1,17 @@
 #ifndef STORAGE_H
 #define STORAGE_H
 #include <string>
-#include <map>
+#include <vector>
+#include <utility>
 #include <iostream>
 
 class Storage {
 private:
-	std::map<std::string, std::string> leaderBoard;
+	std::vector<std::pair<std::string, int>> leaderBoard;
 public:
 	Storage();
 	~Storage();
 	void addData(std::string);
-	std::map<std::string, std::string> getLeaderBoard();
+	std::string getStringLeaderBoard();
 };
 #endif // !STORAGE
