@@ -94,7 +94,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)/SFML-2.5.1/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-audio-d.lib	;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;sfml-network-d.lib;sfml-audio-d.lib	;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -113,7 +113,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)/SFML-2.5.1/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-audio.lib	;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>sfml-graphics.lib;sfml-window.lib;sfml-system.lib;sfml-network.lib;sfml-audio.lib	;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -146,6 +146,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="source\Animator.cpp" />
+    <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\FPS.cpp" />
+    <ClCompile Include="source\Ghost.cpp" />
+    <ClCompile Include="source\Level.cpp" />
+    <ClCompile Include="source\Map.cpp" />
+    <ClCompile Include="source\Menu.cpp" />
+    <ClCompile Include="source\Player.cpp" />
+    <ClCompile Include="source\Storage.cpp" />
+    <ClCompile Include="source\SoundManager.cpp" />
+    <ClCompile Include="source\Tile.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="headers\Animator.h" />
+    <ClInclude Include="headers\Entity.h" />
+    <ClInclude Include="headers\FPS.h" />
+    <ClInclude Include="headers\Ghost.h" />
+    <ClInclude Include="headers\Level.h" />
+    <ClInclude Include="headers\Main.h" />
+    <ClInclude Include="headers\Map.h" />
+    <ClInclude Include="headers\Menu.h" />
+    <ClInclude Include="headers\Player.h" />
+    <ClInclude Include="headers\Storage.h" />
+    <ClInclude Include="headers\SoundManager.h" />
+    <ClInclude Include="headers\Structs.h" />
+    <ClInclude Include="headers\Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

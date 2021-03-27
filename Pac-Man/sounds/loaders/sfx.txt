@@ -1,0 +1,3 @@
+eat waka2.wav
+die Pacma_Dies.wav
+menu waka1.wav
