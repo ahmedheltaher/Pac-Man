@@ -27,16 +27,7 @@ void mainMenu() {
 
     while (mainMenuWindow.isOpen()) {
         sf::Event event;
-        while (mainMenuWindow.pollEvent(event)) {
-            switch (event.type) {
-            case sf::Event::Closed:
-                mainMenuWindow.close();
-                break;
-            case sf::Event::KeyPressed:
-                soundManager.playSFX("menu");
-                menu.handleEvents(event);
-            }
-        }
+        handleBasicEvents(event, mainMenuWindow, menu);
         mainMenuWindow.clear();
         menu.draw(mainMenuWindow);
         mainMenuWindow.draw(logoSprite);
@@ -59,19 +50,7 @@ void instructions() {
 
     while (instructionsWindow.isOpen()) {
         sf::Event event;
-        while (instructionsWindow.pollEvent(event)) {
-            switch (event.type) {
-            case sf::Event::Closed:
-                instructionsWindow.close();
-                break;
-            case sf::Event::KeyPressed:
-                soundManager.playSFX("menu");
-                controlMenu.handleEvents(event);
-                break;
-            default:
-                break;
-            }
-        }
+        handleBasicEvents(event, instructionsWindow, controlMenu);
         instructionsWindow.clear();
         controlMenu.draw(instructionsWindow);
         textMenu.draw(instructionsWindow);
@@ -94,19 +73,7 @@ void leaderBoard() {
 
     while (leaderBoardWindow.isOpen()) {
         sf::Event event;
-        while (leaderBoardWindow.pollEvent(event)) {
-            switch (event.type) {
-            case sf::Event::Closed:
-                leaderBoardWindow.close();
-                break;
-            case sf::Event::KeyPressed:
-                soundManager.playSFX("menu");
-                controlMenu.handleEvents(event);
-                break;
-            default:
-                break;
-            }
-        }
+        handleBasicEvents(event, leaderBoardWindow, controlMenu);
         leaderBoardWindow.clear();
         controlMenu.draw(leaderBoardWindow);
         leaderBoardMenu.draw(leaderBoardWindow);
@@ -128,19 +95,7 @@ void credits() {
 
     while (creditsWindow.isOpen()) {
         sf::Event event;
-        while (creditsWindow.pollEvent(event)) {
-            switch (event.type) {
-            case sf::Event::Closed:
-                creditsWindow.close();
-                break;
-            case sf::Event::KeyPressed:
-                soundManager.playSFX("menu");
-                controlMenu.handleEvents(event);
-                break;
-            default:
-                break;
-            }
-        }
+        handleBasicEvents(event, creditsWindow, controlMenu);
         creditsWindow.clear();
         controlMenu.draw(creditsWindow);
         leaderBoardMenu.draw(creditsWindow);
@@ -152,11 +107,11 @@ void credits() {
 void enterYourName() {
     enterYourNameMutex.lock();
     sf::Thread mainMenuThread(&mainMenu), gameThread(&gameLoop);
-    sf::Clock clock;
-    static sf::Time textEffectTime;
-    static bool showCursor;
     sf::RenderWindow enterYourNameWindow(VIDEOMODE, TITLE + " - Enter Your Name");
     setupLogo(enterYourNameWindow);
+    sf::Clock clock;
+    sf::Time textEffectTime;
+    bool showCursor = true;
     Menu controlMenu("Joystix", 40, 1100, 100, 400, 400, true);
     controlMenu.addNewItem("Continue", [&]() { switchWindows(gameMutex, enterYourNameWindow, gameThread); });
     controlMenu.addNewItem("Back", [&]() { switchWindows(mainMenuMutex, enterYourNameWindow, mainMenuThread); });
@@ -187,8 +142,6 @@ void enterYourName() {
                     playerName.name += event.text.unicode;
                     playerName.length++;
                 }
-                break;
-            default:
                 break;
             }
         }
@@ -221,19 +174,7 @@ void win() {
 
     while (winWindow.isOpen()) {
         sf::Event event;
-        while (winWindow.pollEvent(event)) {
-            switch (event.type) {
-            case sf::Event::Closed:
-                winWindow.close();
-                break;
-            case sf::Event::KeyPressed:
-                soundManager.playSFX("menu");
-                controlMenu.handleEvents(event);
-                break;
-            default:
-                break;
-            }
-        }
+        handleBasicEvents(event, winWindow, controlMenu);
         winWindow.clear();
         controlMenu.draw(winWindow);
         leaderBoardMenu.draw(winWindow);
@@ -255,19 +196,7 @@ void lose() {
 
     while (loseWindow.isOpen()) {
         sf::Event event;
-        while (loseWindow.pollEvent(event)) {
-            switch (event.type) {
-            case sf::Event::Closed:
-                loseWindow.close();
-                break;
-            case sf::Event::KeyPressed:
-                soundManager.playSFX("menu");
-                controlMenu.handleEvents(event);
-                break;
-            default:
-                break;
-            }
-        }
+        handleBasicEvents(event, loseWindow, controlMenu);
         loseWindow.clear();
         controlMenu.draw(loseWindow);
         leaderBoardMenu.draw(loseWindow);
@@ -278,16 +207,16 @@ void lose() {
 
 void gameLoop() {
     gameMutex.lock();
-    sf::Thread mainMenuThread(&mainMenu);
-    sf::Thread winThread(&win), loseThread(&lose);
+    sf::Thread mainMenuThread(&mainMenu), winThread(&win), loseThread(&lose);
     sf::RenderWindow gameWindow(VIDEOMODE, TITLE);
     setupLogo(gameWindow);
+    Level level(2);
+    bool gamePaused = false, whiteSpacesOnly = std::all_of(playerName.name.begin(), playerName.name.end(), isspace);
     FPS fps;
     sf::Clock clock;
     sf::Time time;
     float deltaTime = 0;
     soundManager.playMusic("mainTheme");
-    bool whiteSpacesOnly = std::all_of(playerName.name.begin(), playerName.name.end(), isspace);
     playerName.name = (playerName.name == "" || whiteSpacesOnly) ? "Unknow" : playerName.name;
     Menu sideMenu("Joystix", 20, 1250, 50, 250, 200, false);
     sideMenu.addNewItem("Player: \n" + playerName.name, []() {});
@@ -340,8 +269,6 @@ void gameLoop() {
                 }
                 level.handleEvents(event);
                 break;
-            default:
-                break;
             }
         }
         gameWindow.clear();
@@ -373,9 +300,7 @@ void gameLoop() {
             time = clock.restart();
             deltaTime = time.asSeconds();
         }
-        else {
-            pauseMenu.draw(gameWindow);
-        }
+        else pauseMenu.draw(gameWindow);
         gameWindow.display();
     }
     gameMutex.unlock();

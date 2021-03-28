@@ -11,22 +11,8 @@
 
 #define VIDEOMODE  sf::VideoMode(1500, 1024)
 std::string TITLE = "Pac-Man";
-
 sf::Image icon;
-
-void setupLogo(sf::RenderWindow& window) {
-	icon.loadFromFile("./textures/resized_logo.png");
-	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-};
-
-
-void switchWindows(sf::Mutex& mutex, sf::RenderWindow& window, sf::Thread& thread) {
-	mutex.lock();
-	window.close();
-	thread.launch();
-	mutex.unlock();
-};
-
+SoundManager soundManager("music", "sfx");
 struct PlayerName {
 	std::string name;
 	int length;
@@ -35,9 +21,30 @@ struct PlayerName {
 PlayerName playerName = { "", 0 };
 
 Storage storage;
-SoundManager soundManager("music", "sfx");
-Level level(2);
-bool gamePaused = false;
+void setupLogo(sf::RenderWindow& window) {
+	icon.loadFromFile("./textures/resized_logo.png");
+	window.setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
+};
+
+void switchWindows(sf::Mutex& mutex, sf::RenderWindow& window, sf::Thread& thread) {
+	mutex.lock();
+	window.close();
+	thread.launch();
+	mutex.unlock();
+};
+
+void handleBasicEvents(sf::Event& event, sf::RenderWindow& window, Menu& menu) {
+	while (window.pollEvent(event)) {
+		switch (event.type) {
+		case sf::Event::Closed:
+			window.close();
+			break;
+		case sf::Event::KeyPressed:
+			soundManager.playSFX("menu");
+			menu.handleEvents(event);
+		}
+	}
+};
 
 void mainMenu();
 void gameLoop();

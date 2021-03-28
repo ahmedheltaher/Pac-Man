@@ -1,35 +1,18 @@
-#include <iostream>
 #include "../headers/Entity.h"
 
 // Constructor
-Entity::Entity(float x = 0, float y = 0, std::string animation = "") :position({ x, y }), animator(animation){
-	direction = Direction::NONE;
+Entity::Entity(float x = 0, float y = 0, std::string animation = "") :animator(animation), direction(Direction::NONE){
 	sprite.setPosition(x, y);
-	speed = 3.5;
 	sprite.setScale(3, 3);
 };
 
 // Destructor
 Entity::~Entity() {};
 
-// For Debug
-void Entity::info() const {
-	std::cout << position.x << " " << position.y << "\n";
-}
-
-
-// Getter For Position
-Position Entity::getPosition() const {
-	return position;
-};
-
 // Setter For Position
 void Entity::setPosition(float x, float y) {
-	position = { x, y };
 	sprite.setPosition(sf::Vector2f(x, y));
 };
-
-
 
 // Loader For Sprite Texture
 void Entity::loadTexture(std::string fileName) {
@@ -62,6 +45,7 @@ void Entity::setDirection(Direction dir) {
 
 // Setter for Player Speed
 void Entity::setSpeed(float s) {
+	if (speed == s) return;
 	speed = s;
 };
 
@@ -85,13 +69,10 @@ void Entity::update(float deltaTime, std::vector<sf::RectangleShape> map) {
 		move(-speed * deltaTime, 0.0, map);
 		sprite.setTextureRect(animator.runAnimation("left"));
 		break;
-	default:
-		break;
 	}
 };
 
 bool Entity::move(float moveX, float moveY, std::vector<sf::RectangleShape> map) {
-	if (moveX == 0 && moveY == 0) return false;
 	for (unsigned int i = 0; i < map.size(); i++) {
 		if (sprite.getPosition().x + moveX <= map[i].getPosition().x + map[i].getGlobalBounds().width &&
 			sprite.getPosition().x + sprite.getGlobalBounds().width + moveX >= map[i].getPosition().x &&
@@ -99,6 +80,7 @@ bool Entity::move(float moveX, float moveY, std::vector<sf::RectangleShape> map)
 			sprite.getPosition().y + sprite.getGlobalBounds().height + moveY >= map[i].getPosition().y)
 			return false;
 	}
+	if (moveX == 0 && moveY == 0) return false;
 	sprite.move(moveX, moveY);
 	return true;
 };

@@ -1,5 +1,4 @@
 #include "../headers/Player.h"
-#include "../headers/Entity.h"
 
 // Constructor
 Player::Player(float x = 0, float y = 0) :Entity(x, y, "pacman"), lives(3) {
@@ -25,8 +24,6 @@ void Player::handleKeyboardEvent(sf::Event event) {
 		break;
 	case sf::Keyboard::A:
 		setDirection(Direction::LEFT);
-		break;
-	default:
 		break;
 	}
 };

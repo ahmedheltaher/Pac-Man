@@ -26,8 +26,7 @@ void Storage::addData(std::string data) {
 	dataBaseFile.close();
 };
 
-bool sortbysec(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b)
-{
+bool sortbysec(const std::pair<std::string, int>& a, const std::pair<std::string, int>& b) {
 	return (a.second > b.second);
 }
 

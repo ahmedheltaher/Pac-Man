@@ -7,18 +7,18 @@
 class Entity {
 	friend class Player;
 	friend class Ghost;
+
 private:
 	Direction direction;
-	float speed;
-	Position position;
+	float speed{};
 	sf::Texture texture;
 	sf::Sprite sprite;
+	bool move(float, float, std::vector<sf::RectangleShape>);
 
 public:
 	Entity(float, float, std::string);
 	~Entity();
-	void info() const; // For Debug
-	Position getPosition() const;
+	Animator animator;
 	sf::Sprite getSprite() const;
 	void setPosition(float, float);
 	void loadTexture(std::string);
@@ -27,8 +27,6 @@ public:
 	void setScale(float, float);
 	void setTextureRect(sf::IntRect);
 	void update(float, std::vector<sf::RectangleShape>);
-	bool move(float, float, std::vector<sf::RectangleShape>);
-	Animator animator;
 };
 
 #endif // !ENTITY
