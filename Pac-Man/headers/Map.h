@@ -7,6 +7,11 @@
 #include <string>
 #include "./Tile.h"
 
+struct Position {
+	float x;
+	float y;
+};
+
 class Map {
 private:
 	std::map<std::string, std::vector<Tile>> gridMap;

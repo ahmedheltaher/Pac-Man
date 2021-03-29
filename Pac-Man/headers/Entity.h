@@ -1,13 +1,19 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 #include <SFML/Graphics.hpp>
-#include "./Structs.h"
 #include "./Animator.h"
 
-class Entity {
-	friend class Player;
-	friend class Ghost;
+enum class Direction {
+	LEFT,
+	UP,
+	NONE,
+	DOWN,
+	RIGHT
+};
 
+class Entity {
+	friend class Ghost;
+	friend class Player;
 private:
 	Direction direction;
 	float speed{};

@@ -1,7 +1,7 @@
 #include "../headers/Menu.h"
 
 // Constructor
-Menu::Menu(std::string fontName, int fontSize = 40,  int left = 0, int top = 0, int width = 0, int height = 0, bool isSelectable = false) :fontSize(fontSize), selectedItemIndex(0), size({ width, height }), padding({left, top}) {
+Menu::Menu(std::string fontName, float fontSize = 40, float left = 0, float top = 0, float width = 0, float height = 0, bool isSelectable = false) :fontSize(fontSize), selectedItemIndex(0), size({ width, height }), padding({left, top}) {
 	if (!font.loadFromFile("./fonts/" + fontName + ".ttf")) return;
 	if (!isSelectable) setSelectedItemIndex(-1);
 };

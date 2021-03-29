@@ -1,7 +1,4 @@
 #include "../headers/Storage.h"
-#include <fstream>
-#include <sstream>
-#include <algorithm>
 
 // Constructor
 Storage::Storage() {
@@ -30,13 +27,21 @@ bool sortbysec(const std::pair<std::string, int>& a, const std::pair<std::string
 	return (a.second > b.second);
 }
 
+std::string left(const std::string s, const int w) {
+	std::stringstream ss, spaces;
+	int padding = w - s.size();
+	for (int i = 0; i < padding; ++i) spaces << " ";
+	ss << s << spaces.str();
+	return ss.str();
+}
+
 std::string Storage::getStringLeaderBoard() {
 	std::string data = "";
 	int dataEnterd = 0;
 	std::sort(leaderBoard.begin(), leaderBoard.end(), sortbysec);
-	for (int i = 0; i < leaderBoard.size(); i++) {
+	for (unsigned int i = 0; i < leaderBoard.size(); i++) {
 		if (dataEnterd > 10) break;
-		data += leaderBoard[i].first + " - " + std::to_string(leaderBoard[i].second) + "\n";
+		data += left(leaderBoard[i].first, 10) + " - " + std::to_string(leaderBoard[i].second) + "\n";
 		dataEnterd++;
 	}
 	return data;

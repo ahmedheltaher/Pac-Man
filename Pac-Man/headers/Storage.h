@@ -4,6 +4,9 @@
 #include <vector>
 #include <utility>
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
 
 class Storage {
 private:

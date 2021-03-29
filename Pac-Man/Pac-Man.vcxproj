@@ -170,7 +170,6 @@
     <ClInclude Include="headers\Player.h" />
     <ClInclude Include="headers\Storage.h" />
     <ClInclude Include="headers\SoundManager.h" />
-    <ClInclude Include="headers\Structs.h" />
     <ClInclude Include="headers\Tile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

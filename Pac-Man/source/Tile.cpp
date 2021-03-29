@@ -1,19 +1,15 @@
 #include "../headers/Tile.h"
 
 // Constructor
-Tile::Tile(float x, float y, int width = 32, int height = 32, sf::Color fill = sf::Color(0, 93, 255)) :position({ x, y }), size({width, height}) {
-	sprite.setSize(sf::Vector2f(size.width, size.height));
-	sprite.setPosition(sf::Vector2f(position.x, position.y));
+Tile::Tile(float x, float y, float width = 32, float height = 32, sf::Color fill = sf::Color(0, 93, 255)) {
+	sprite.setSize(sf::Vector2f(width, height));
+	sprite.setPosition(sf::Vector2f(x, y));
 	sprite.setFillColor(fill);
 };
 
 // Destructor
 Tile::~Tile() {};
 
-// Getter For Position
-Position Tile::getPosition() const {
-	return position;
-};
 
 sf::RectangleShape Tile::getSprite() const {
 	return sprite;

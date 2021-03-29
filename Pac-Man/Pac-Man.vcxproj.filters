@@ -65,9 +65,6 @@
     <ClInclude Include="headers\Player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="headers\Structs.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="headers\FPS.h">
       <Filter>Header Files</Filter>
     </ClInclude>

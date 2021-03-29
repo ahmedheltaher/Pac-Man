@@ -5,7 +5,16 @@
 #include <functional>
 #include <map>
 #include <string>
-#include "./Structs.h"
+
+struct Size {
+	float width;
+	float height;
+};
+
+struct Padding {
+	float left;
+	float top;
+};
 
 enum class MenuDirections {
 	UP,
@@ -22,7 +31,7 @@ private:
 	std::vector<sf::Text> menu;
 	std::map<std::string, std::function<void()>> menuFunctions;
 public:
-	Menu(std::string, int, int, int, int, int, bool);
+	Menu(std::string, float, float, float, float, float, bool);
 	~Menu();
 	void draw(sf::RenderWindow&);
 	void handleEvents(sf::Event);
