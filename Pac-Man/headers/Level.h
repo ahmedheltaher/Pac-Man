@@ -13,6 +13,7 @@ private:
 	std::vector<Ghost> ghosts;
 	std::vector<sf::RectangleShape> readyMap = map.getRendrableTilemap();
 	std::vector<sf::RectangleShape> readyCoins = map.getRendrableCoinsLayout();
+	std::map<std::string, std::vector<sf::RectangleShape>> readyGridMap = map.getRendrableGridMap();
 	std::vector<Tile> coins = map.getCoins();
 public:
 	Level(int);

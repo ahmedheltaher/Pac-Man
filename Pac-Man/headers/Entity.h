@@ -27,6 +27,7 @@ public:
 	void setScale(float, float);
 	void setTextureRect(sf::IntRect);
 	void update(float, std::vector<sf::RectangleShape>);
+	std::string getQuarter();
 };
 
 #endif // !ENTITY

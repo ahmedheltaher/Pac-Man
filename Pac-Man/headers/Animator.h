@@ -11,6 +11,7 @@ private:
 	std::map<std::string, std::vector<sf::IntRect>> animations;
 	std::map<std::string, float> animationDurations;
 	int animationInductor;
+	int FPS;
 public:
 	Animator(std::string);
 	~Animator();

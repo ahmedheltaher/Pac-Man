@@ -17,18 +17,18 @@ Level::~Level() {};
 
 void Level::update(float deltaTime) {
     Position pos = map.getPlayerPosition();
-    pacman.update(deltaTime, readyMap);
-    for (unsigned int i = 0; i < ghosts.size(); i++) ghosts[i].update(deltaTime, readyMap);
-    int colliosionWithCoins = chekCollisionWithCoins();
-    if (colliosionWithCoins != -1) {
+    pacman.update(deltaTime, readyGridMap[pacman.getQuarter()]);
+    for (unsigned int i = 0; i < ghosts.size(); i++) ghosts[i].update(deltaTime, readyGridMap[ghosts[i].getQuarter()]);
+    int coinColliedeWithIndex = chekCollisionWithCoins();
+    if (coinColliedeWithIndex != -1) {
         score++;
-        coins[colliosionWithCoins].~Tile();
-        readyCoins.erase(readyCoins.begin() + colliosionWithCoins);
+        readyCoins.erase(readyCoins.begin() + coinColliedeWithIndex);
+        coins[coinColliedeWithIndex].~Tile();
         soundManager.playSFX("eat");
     }
     if (chekCollisionWithEnemies() && pacman.getLives() > 0) {
+        soundManager.playSFX("die");
         pacman.setPosition(pos.x, pos.y);
-        //pacman.setTextureRect(pacman.animator.runAnimation("die"));
         pacman.setDirection(Direction::NONE);
         pacman.setTextureRect(sf::IntRect(3, 3, 14, 14));
         pacman.decrementLives();

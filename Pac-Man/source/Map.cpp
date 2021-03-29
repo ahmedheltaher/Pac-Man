@@ -10,14 +10,17 @@
 Map::Map(std::string fileName) :playerPosition({0, 0}) {
 	std::ifstream mapFile("./maps/" + fileName + ".txt");
 	if (mapFile.is_open()) {
-		std::string line;
+		std::string line, quarter = "";
 		int lineCount = 0;
 		while (std::getline(mapFile, line)) {
 			for (unsigned int column = 0; column < line.length(); column++) {
 				float x = (float) column * 32, y = (float) lineCount * 32;
+				quarter += (y > 512) ? "bottom" : "top";
+				quarter += (x > 750) ? "Left" : "Right";
 				switch (line[column]) {
 				case '1':
 					tilemap.push_back(Tile(x, y, 32, 32, sf::Color(0, 93, 255)));
+					gridMap[quarter].push_back(Tile(x, y, 32, 32, sf::Color(0, 93, 255)));
 					break;
 				case 'X':
 					coinsLayout.push_back(Tile((x > 640) ? x  : x + 28, (y > 512) ? y : y + 28, 8, 8, sf::Color(255, 255, 0)));
@@ -34,6 +37,7 @@ Map::Map(std::string fileName) :playerPosition({0, 0}) {
 				default:
 					break;
 				}
+				quarter = "";
 			}
 			lineCount++;
 		}
@@ -41,6 +45,7 @@ Map::Map(std::string fileName) :playerPosition({0, 0}) {
 	mapFile.close();
 	for (Tile tile : tilemap) rendrableTilemap.push_back(tile.getSprite());
 	for (Tile tile : coinsLayout) rendrableCoinsLayout.push_back(tile.getSprite());
+	for (auto& i : gridMap) for (Tile tile : i.second) readyGridMap[i.first].push_back(tile.getSprite());
 };
 
 // Destructor
@@ -76,4 +81,8 @@ void Map::setPlayerPosition(float x, float y) {
 
 std::vector<Ghost> Map::getGhosts() {
 	return ghosts;
+};
+
+std::map<std::string, std::vector<sf::RectangleShape>> Map::getRendrableGridMap() {
+	return readyGridMap;
 };

@@ -49,6 +49,13 @@ void Entity::setSpeed(float s) {
 	speed = s;
 };
 
+std::string Entity::getQuarter() {
+	std::string quarter = "";
+	quarter += (sprite.getPosition().y > 512) ? "bottom" : "top";
+	quarter += (sprite.getPosition().x > 750) ? "Left" : "Right";
+	return quarter;
+};
+
 
 // Handle Update
 void Entity::update(float deltaTime, std::vector<sf::RectangleShape> map) {

@@ -280,22 +280,15 @@ void gameLoop() {
             sideMenu.draw(gameWindow);
             level.update(deltaTime);
             if (level.gotAllCoins()) {
-                winMutex.lock();
-                winThread.launch();
-                gameWindow.close();
-                winMutex.unlock();
+                switchWindows(winMutex, gameWindow, winThread);
                 soundManager.pause();
                 storage.addData(playerName.name + " " + std::to_string(level.getScore()));
             }
             if (level.pacmanDied()) {
-                loseMutex.lock();
-                loseThread.launch();
-                gameWindow.close();
-                loseMutex.unlock();
+                switchWindows(loseMutex, gameWindow, loseThread);
                 soundManager.pause();
                 storage.addData(playerName.name + " " + std::to_string(level.getScore()));
             }
-
             fps.update();
             time = clock.restart();
             deltaTime = time.asSeconds();

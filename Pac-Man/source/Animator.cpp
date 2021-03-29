@@ -4,7 +4,7 @@
 #include <sstream>
 
 // Constructor
-Animator::Animator(std::string fileName) :animationInductor(0) {
+Animator::Animator(std::string fileName) :animationInductor(0), FPS(60) {
 	std::ifstream mainAnimationsFile("./textures/animations/" + fileName + "/main.txt");
 	std::vector<std::string> keyframesFiles;
 	if (mainAnimationsFile.is_open()) {
@@ -19,7 +19,7 @@ Animator::Animator(std::string fileName) :animationInductor(0) {
 	}
 	mainAnimationsFile.close();
 	for (unsigned int i = 0; i < keyframesFiles.size(); i++) {
-		std::map<std::string, std::vector<sf::IntRect>> preAnimations;
+		std::map<std::string, std::vector<sf::IntRect>>* preAnimations = new std::map<std::string, std::vector<sf::IntRect>>();
 		std::string line;
 		int l, t, w, h, frames = 0;
 		std::ifstream keyframesFile("./textures/animations/" + fileName + "/" + keyframesFiles[i] + ".txt");
@@ -27,17 +27,19 @@ Animator::Animator(std::string fileName) :animationInductor(0) {
 			while (std::getline(keyframesFile, line)) {
 				std::istringstream in(line);
 				in >> l >> t >> w >> h;
-				preAnimations[keyframesFiles[i]].push_back(sf::IntRect(l, t, w, h));
+				(*preAnimations)[keyframesFiles[i]].push_back(sf::IntRect(l, t, w, h));
 				frames++;
 			}
 		}
 		for (int f = 0; f < frames; f++) {
-			for (int t = 0; t < 24 / frames; t++) {
-				animations[keyframesFiles[i]].push_back(preAnimations[keyframesFiles[i]][f]);
+			for (int t = 0; t < FPS / frames; t++) {
+				animations[keyframesFiles[i]].push_back((*preAnimations)[keyframesFiles[i]][f]);
 			}
 		}
 		frames = 0;
 		keyframesFile.close();
+		preAnimations->clear();
+		delete preAnimations;
 	}
 };
 
