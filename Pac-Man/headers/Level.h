@@ -10,7 +10,7 @@ class Level {
 private:
 	Map map;
 	int score;
-	std::vector<Ghost> ghosts;
+	std::vector<Ghost> ghosts = map.getGhosts();;
 	std::vector<sf::RectangleShape> readyMap = map.getRendrableTilemap();
 	std::vector<sf::RectangleShape> readyCoins = map.getRendrableCoinsLayout();
 	std::map<std::string, std::vector<sf::RectangleShape>> readyGridMap = map.getRendrableGridMap();

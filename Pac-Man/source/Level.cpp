@@ -4,13 +4,7 @@
 #include <dos.h>
 
 // Constructor
-Level::Level(int levelNumber) :map("level_" + std::to_string(levelNumber)), pacman(map.getPlayerPosition().x, map.getPlayerPosition().y), score(0), soundManager("music", "sfx") {
-    ghosts = map.getGhosts();
-    for (unsigned int i = 0; i < ghosts.size(); i++) {
-        if (ghosts[i].moveType == Name::Horizontal) ghosts[i].loadTexture("red_ghost.png");
-        else ghosts[i].loadTexture("yellow_ghost.png");
-    }
-};
+Level::Level(int levelNumber) :map("level_" + std::to_string(levelNumber)), pacman(map.getPlayerPosition().x, map.getPlayerPosition().y), score(0), soundManager("music", "sfx") {};
 
 // Destructor
 Level::~Level() {};

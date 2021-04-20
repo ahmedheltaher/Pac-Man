@@ -4,6 +4,7 @@
 Entity::Entity(float x = 0, float y = 0, std::string animation = "") :animator(animation), direction(Direction::NONE){
 	sprite.setPosition(x, y);
 	sprite.setScale(3, 3);
+	texture = new sf::Texture;
 };
 
 // Destructor
@@ -16,8 +17,8 @@ void Entity::setPosition(float x, float y) {
 
 // Loader For Sprite Texture
 void Entity::loadTexture(std::string fileName) {
-	texture.loadFromFile("./textures/" + fileName);
-	sprite.setTexture(texture);
+	texture->loadFromFile("./textures/" + fileName);
+	sprite.setTexture(*texture);
 };
 
 // Getter For Sprite

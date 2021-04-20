@@ -12,7 +12,7 @@ private:
 	void changeGhostDirection();
 public:
 	Name moveType;
-	Ghost(Name, float, float);
+	Ghost(float, float, Name);
 	~Ghost();
 	void update(float, std::vector<sf::RectangleShape>);
 };

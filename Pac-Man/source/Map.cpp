@@ -6,6 +6,8 @@
 #include <fstream>
 #include <string>
 
+
+
 // Constructor
 Map::Map(std::string fileName) :playerPosition({0, 0}) {
 	std::ifstream mapFile("./maps/" + fileName + ".txt");
@@ -29,10 +31,10 @@ Map::Map(std::string fileName) :playerPosition({0, 0}) {
 					setPlayerPosition(x + 12, y);
 					break;
 				case 'H':
-					ghosts.push_back(Ghost(Name::Horizontal, x + 16, (y > 500) ? y + 16 : y - 16));
+					ghosts.push_back(Ghost(x + 16, (y > 500) ? y + 16 : y - 16, Name::Horizontal));
 					break;
 				case 'V':
-					ghosts.push_back(Ghost(Name::Virtical, (x > 500) ? x + 16 : x - 16, y + 16));
+					ghosts.push_back(Ghost((x > 500) ? x + 16 : x - 16, y + 16, Name::Virtical));
 					break;
 				default:
 					break;

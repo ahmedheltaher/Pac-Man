@@ -40,8 +40,8 @@ std::string Storage::getStringLeaderBoard() {
 	int dataEnterd = 0;
 	std::sort(leaderBoard.begin(), leaderBoard.end(), sortbysec);
 	for (unsigned int i = 0; i < leaderBoard.size(); i++) {
-		if (dataEnterd > 10) break;
-		data += left(leaderBoard[i].first, 10) + " - " + std::to_string(leaderBoard[i].second) + "\n";
+		if (dataEnterd >= 10) break;
+		data += left(std::to_string(i + 1), 2)  + "->" + left(leaderBoard[i].first, 10) + "->" + std::to_string(leaderBoard[i].second) + "\n";
 		dataEnterd++;
 	}
 	return data;

@@ -2,7 +2,7 @@
 #include <iostream>
 
 // Constructor
-Ghost::Ghost(Name name, float x = 0, float y = 0) :Entity(x, y, "ghost"), moveType(name) {
+Ghost::Ghost(float x = 0, float y = 0, Name name = Name::Virtical) :Entity(x, y, "ghost"), moveType(name) {
 	setSpeed(200);
 	switch (moveType) {
 	case Name::Virtical:
@@ -10,8 +10,8 @@ Ghost::Ghost(Name name, float x = 0, float y = 0) :Entity(x, y, "ghost"), moveTy
 		setTextureRect(sf::IntRect(3, 3, 14, 14));
 		break;
 	case Name::Horizontal:
-		loadTexture("red_ghost.png");
 		setTextureRect(sf::IntRect(3, 63, 14, 14));
+		loadTexture("red_ghost.png");
 		break;
 	}
 };

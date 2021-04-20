@@ -17,7 +17,7 @@ class Entity {
 private:
 	Direction direction;
 	float speed{};
-	sf::Texture texture;
+	sf::Texture* texture;
 	sf::Sprite sprite;
 	bool move(float, float, std::vector<sf::RectangleShape>);
 
